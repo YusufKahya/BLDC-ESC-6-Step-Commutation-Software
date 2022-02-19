@@ -117,24 +117,24 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
+  {//fork deneme
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(htim1.Instance->CNT == motorControl.PulseCenter) // Timer'ın count değeri, duty cycle'ın yarısına eşitse girer
-	  {
-
-		  motorControl.A_Out = HAL_COMP_GetOutputLevel(&hcomp1);
-		  motorControl.B_Out = HAL_COMP_GetOutputLevel(&hcomp3);
-		  motorControl.C_Out = HAL_COMP_GetOutputLevel(&hcomp5);
-
-		  motorControl.RotorPosition = (motorControl.C_Out << 2) + (motorControl.B_Out << 1) + (motorControl.A_Out);
-
-		  if(motorControl.RotorPosition == motorControl.LastPosition + 1)	//Bu yapı State_C_B'den sonra çalışmaz, düşün.
-		  {
-			  Set_Motor_State(State, motorControl.DutyCycle);
-		  }
-	  }
+//	  if(htim1.Instance->CNT == motorControl.PulseCenter) // Timer'ın count değeri, duty cycle'ın yarısına eşitse girer
+//	  {
+//
+//		  motorControl.A_Out = HAL_COMP_GetOutputLevel(&hcomp1);
+//		  motorControl.B_Out = HAL_COMP_GetOutputLevel(&hcomp3);
+//		  motorControl.C_Out = HAL_COMP_GetOutputLevel(&hcomp5);
+//
+//		  motorControl.RotorPosition = (motorControl.C_Out << 2) + (motorControl.B_Out << 1) + (motorControl.A_Out);
+//
+//		  if(motorControl.RotorPosition == motorControl.LastPosition + 1)	//Bu yapı State_C_B'den sonra çalışmaz, düşün.
+//		  {
+//			  Set_Motor_State(State, motorControl.DutyCycle);
+//		  }
+//	  }
   }
   /* USER CODE END 3 */
 }
@@ -201,7 +201,7 @@ static void MX_COMP1_Init(void)
 
   /* USER CODE END COMP1_Init 1 */
   hcomp1.Instance = COMP1;
-  hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_1_2VREFINT;
+  hcomp1.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1_CH2;
   hcomp1.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp1.Init.Output = COMP_OUTPUT_NONE;
   hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
@@ -233,7 +233,7 @@ static void MX_COMP3_Init(void)
 
   /* USER CODE END COMP3_Init 1 */
   hcomp3.Instance = COMP3;
-  hcomp3.Init.InvertingInput = COMP_INVERTINGINPUT_1_2VREFINT;
+  hcomp3.Init.InvertingInput = COMP_INVERTINGINPUT_IO2;
   hcomp3.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp3.Init.Output = COMP_OUTPUT_NONE;
   hcomp3.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
@@ -265,7 +265,7 @@ static void MX_COMP5_Init(void)
 
   /* USER CODE END COMP5_Init 1 */
   hcomp5.Instance = COMP5;
-  hcomp5.Init.InvertingInput = COMP_INVERTINGINPUT_1_2VREFINT;
+  hcomp5.Init.InvertingInput = COMP_INVERTINGINPUT_IO2;
   hcomp5.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp5.Init.Output = COMP_OUTPUT_NONE;
   hcomp5.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;

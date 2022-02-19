@@ -60,8 +60,8 @@ all: main-build
 main-build: BLDC_6_Step_Control.elf secondary-outputs
 
 # Tool invocations
-BLDC_6_Step_Control.elf: $(OBJS) $(USER_OBJS) C:\Users\ysfkh\Desktop\BLDC-ESC-6-Step-Commutation-Software\BLDC_6_Step_Control\STM32F303RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "BLDC_6_Step_Control.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ysfkh\Desktop\BLDC-ESC-6-Step-Commutation-Software\BLDC_6_Step_Control\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BLDC_6_Step_Control.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+BLDC_6_Step_Control.elf: $(OBJS) $(USER_OBJS) D:\Fork\BLDC-ESC-6-Step-Commutation-Software\BLDC_6_Step_Control\STM32F303RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "BLDC_6_Step_Control.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Fork\BLDC-ESC-6-Step-Commutation-Software\BLDC_6_Step_Control\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BLDC_6_Step_Control.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
