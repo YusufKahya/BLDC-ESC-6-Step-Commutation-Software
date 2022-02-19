@@ -1,0 +1,2 @@
+SixStepCommutation.c:16:6:PeripheralsStart	8	static
+SixStepCommutation.c:47:6:Set_Motor_State	16	static
