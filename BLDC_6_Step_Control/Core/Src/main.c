@@ -108,9 +108,21 @@ int main(void)
 
   PeripheralsStart();
 
-//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,10);
-//
-//  motorControl.PulseCenter = htim1.Instance->CCR1 / 2;
+  for(int i = 0; i < 10; i++)
+  {
+	  Set_Motor_State(1, 100);
+	  HAL_Delay(5);
+	  Set_Motor_State(2, 100);
+	  HAL_Delay(5);
+	  Set_Motor_State(3, 100);
+	  HAL_Delay(5);
+	  Set_Motor_State(4, 100);
+	  HAL_Delay(5);
+	  Set_Motor_State(5, 100);
+	  HAL_Delay(5);
+	  Set_Motor_State(6, 100);
+	  HAL_Delay(5);
+  }
 
   /* USER CODE END 2 */
 
@@ -121,20 +133,20 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	  if(htim1.Instance->CNT == motorControl.PulseCenter) // Timer'ın count değeri, duty cycle'ın yarısına eşitse girer
-//	  {
-//
-//		  motorControl.A_Out = HAL_COMP_GetOutputLevel(&hcomp1);
-//		  motorControl.B_Out = HAL_COMP_GetOutputLevel(&hcomp3);
-//		  motorControl.C_Out = HAL_COMP_GetOutputLevel(&hcomp5);
-//
+	  if(htim1.Instance->CNT == motorControl.PulseCenter) // Timer'ın count değeri, duty cycle'ın yarısına eşitse girer
+	  {
+
+		  motorControl.A_Out = HAL_COMP_GetOutputLevel(&hcomp1);
+		  motorControl.B_Out = HAL_COMP_GetOutputLevel(&hcomp3);
+		  motorControl.C_Out = HAL_COMP_GetOutputLevel(&hcomp5);
+
 //		  motorControl.RotorPosition = (motorControl.C_Out << 2) + (motorControl.B_Out << 1) + (motorControl.A_Out);
 //
 //		  if(motorControl.RotorPosition == motorControl.LastPosition + 1)	//Bu yapı State_C_B'den sonra çalışmaz, düşün.
 //		  {
 //			  Set_Motor_State(State, motorControl.DutyCycle);
 //		  }
-//	  }
+	  }
   }
   /* USER CODE END 3 */
 }
