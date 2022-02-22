@@ -7,15 +7,11 @@
 
 #include "main.h"
 #include "SixStepCommutation.h"
-
-//void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
-//{
-//
-//}
+#include "TimeTask.h"
 
 void PeripheralsStart()
 {
-//	  HAL_TIM_Base_Start_IT(&htim4);	// Time Task için gerekli global interrupt başlatılıyor
+	  HAL_TIM_Base_Start_IT(&htim4);	// Time Task için gerekli global interrupt başlatılıyor
 
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);	// Phase A High
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);	// Phase B High
@@ -28,102 +24,171 @@ void PeripheralsStart()
 	  HAL_COMP_Start(&hcomp3);  // Phase B - Neutral Point
 	  HAL_COMP_Start(&hcomp5);  // Phase C - Neutral Point
 
-	  motorControl.DutyCycle = 50;	// Default %50 Duty Cycle
-	  motorControl.PulseCenter = 0;
+	  Motor_Control.Duty_Cycle = 50;	// Default %50 Duty Cycle
+	  Motor_Control.Pulse_Center = 0;
 
-	  motorControl.A_Out = 0;
-	  motorControl.B_Out = 0;
-	  motorControl.C_Out = 0;
+	  Motor_Control.A_Out = 0;
+	  Motor_Control.B_Out = 0;
+	  Motor_Control.C_Out = 0;
 
-	  motorControl.RotorPosition = 0;
-	  motorControl.LastPosition = 1;
+	  Motor_Control.Rotor_Position = 0;
+	  Motor_Control.Last_Trigger = 0;
+	  Motor_Control.State = 0;
 
-	  motorControl.Signal = 0;
-	  motorControl.MaxSignal = 0;
+	  Motor_Control.Signal = 0;
+	  Motor_Control.Max_Signal = 0;
 
-	  State = 1;
+	  Start_Up.Duty_Cycle = 100;
+	  Start_Up.Delay_MilliSeconds = 5;
+	  Start_Up.Tour = 10;
+//	  Start_Up.PWM_Frequency = ( PeriphClkInit.Tim1ClockSelection/(htim1.Init.Period+1)*(htim1.Init.Prescaler+1));
+	  Start_Up.State = 0;
+	  Start_Up.AlignCoefficient = 5;
+
+	  trigger_Sequence = 1;
+
+	  Trigger_Control_Index[1] = State_A_B_In;
+	  Trigger_Control_Index[2] = State_A_C_In;
+	  Trigger_Control_Index[3] = State_B_C_In;
+	  Trigger_Control_Index[4] = State_B_A_In;
+	  Trigger_Control_Index[5] = State_C_A_In;
+	  Trigger_Control_Index[6] = State_C_B_In;
+}
+
+void Start_Up_Motor()
+{
+	int i = 0;
+
+	while(i < Start_Up.Tour)
+	{
+		Start_Up.Counter = timerCounter % Start_Up.Delay_MilliSeconds;
+
+		if(Start_Up.Counter == 0)
+		{
+			Set_Motor_State(Start_Up.State, Start_Up.Duty_Cycle);
+			Start_Up.State = (Start_Up.State + 1) % 6;
+
+			i++;
+		}
+	}
+
+	drive_Stage = ALIGN;
+}
+
+void Align_Motor()
+{
+	int i = 0;
+
+	while(i < Start_Up.Tour*Start_Up.AlignCoefficient)
+	{
+		Start_Up.Counter = timerCounter % Start_Up.Delay_MilliSeconds;
+
+		if(Start_Up.Counter == 0)
+		{
+			Set_Motor_State(Start_Up.State, Start_Up.Duty_Cycle);
+			Start_Up.State = (Start_Up.State + 1) % 6;
+
+			i++;
+		}
+	}
+
+	drive_Stage = RUN;
+}
+
+void Run_Motor()
+{
+	  Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
+	  Motor_Control.B_Out = HAL_COMP_GetOutputLevel(&hcomp3) >> 30;
+	  Motor_Control.C_Out = HAL_COMP_GetOutputLevel(&hcomp5) >> 30;
+
+	  Motor_Control.Rotor_Position = (Motor_Control.A_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.C_Out);
+
+	  if(Trigger_Control_Index[Motor_Control.Rotor_Position] == (Motor_Control.Last_Trigger % 5) + 1)
+	  {
+		  Set_Motor_State(Motor_Control.Rotor_Position, Motor_Control.Duty_Cycle);
+	  }
 }
 
 void Set_Motor_State(uint8_t State, uint16_t DutyCycle)
 {
-	motorControl.Signal = (htim1.Init.Period+1)*DutyCycle/100;	// CCR
-	motorControl.MaxSignal = htim1.Init.Period+1;				// ARR
+	Motor_Control.Signal = (htim1.Init.Period+1)*DutyCycle/100;	// CCR
+	Motor_Control.Max_Signal = htim1.Init.Period+1;				// ARR
 
 	switch(State)
 	{
 
-		case State_A_B:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,motorControl.Signal);		// A HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,motorControl.MaxSignal);	// B LOW AVTIVE
+		case State_A_B_Out:
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,Motor_Control.Signal);		// A HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,Motor_Control.Max_Signal);	// B LOW AVTIVE
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
 
-			motorControl.LastPosition = State_A_B;
-			motorControl.PulseCenter = htim1.Instance->CCR1 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
+			Motor_Control.Last_Trigger = State_A_B_Out;
+			Motor_Control.Pulse_Center = htim1.Instance->CCR1 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
 
 			break;
 
-		case State_A_C:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,motorControl.Signal);		// A HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,motorControl.MaxSignal);	// C LOW ACTIVE
+		case State_A_C_Out:
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,Motor_Control.Signal);		// A HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,Motor_Control.Max_Signal);	// C LOW ACTIVE
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
 
-			motorControl.LastPosition = State_A_C;
+			Motor_Control.Last_Trigger = State_A_C_Out;
 
 			break;
 
-		case State_B_C:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,motorControl.Signal);		// B HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,motorControl.MaxSignal);	// C LOW ACTIVE
+		case State_B_C_Out:
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,Motor_Control.Signal);		// B HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,Motor_Control.Max_Signal);	// C LOW ACTIVE
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
 
-			motorControl.LastPosition = State_B_C;
-			motorControl.PulseCenter = htim1.Instance->CCR2 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
+			Motor_Control.Last_Trigger = State_B_C_Out;
+			Motor_Control.Pulse_Center = htim1.Instance->CCR2 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
 
 			break;
 
-		case State_B_A:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,motorControl.Signal);	// B HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,motorControl.MaxSignal);	// A LOW ACTIVE
+		case State_B_A_Out:
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,Motor_Control.Signal);	// B HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,Motor_Control.Max_Signal);	// A LOW ACTIVE
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
 
-			motorControl.LastPosition = State_B_A;
+			Motor_Control.Last_Trigger = State_B_A_Out;
 
 			break;
 
-		case State_C_A:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,motorControl.Signal);	// C HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,motorControl.MaxSignal);	// A LOW ACTIVE
+		case State_C_A_Out:
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,Motor_Control.Signal);	// C HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,Motor_Control.Max_Signal);	// A LOW ACTIVE
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
 
-			motorControl.LastPosition = State_C_A;
-			motorControl.PulseCenter = htim1.Instance->CCR3 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
+			Motor_Control.Last_Trigger = State_C_A_Out;
+			Motor_Control.Pulse_Center = htim1.Instance->CCR3 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
 
 			break;
 
-		case State_C_B:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,motorControl.Signal);	// C HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,motorControl.MaxSignal);	// B LOW ACTIVE
+		case State_C_B_Out:
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,Motor_Control.Signal);	// C HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,Motor_Control.Max_Signal);	// B LOW ACTIVE
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
 
-			motorControl.LastPosition = State_C_B;
+			Motor_Control.Last_Trigger = State_C_B_Out;
 
 			break;
 
@@ -132,3 +197,8 @@ void Set_Motor_State(uint8_t State, uint16_t DutyCycle)
 
 	}
 }
+
+//void Trigger()
+//{
+//
+//}

@@ -108,44 +108,44 @@ int main(void)
 
   PeripheralsStart();
 
-  for(int i = 0; i < 10; i++)
-  {
-	  Set_Motor_State(1, 100);
-	  HAL_Delay(5);
-	  Set_Motor_State(2, 100);
-	  HAL_Delay(5);
-	  Set_Motor_State(3, 100);
-	  HAL_Delay(5);
-	  Set_Motor_State(4, 100);
-	  HAL_Delay(5);
-	  Set_Motor_State(5, 100);
-	  HAL_Delay(5);
-	  Set_Motor_State(6, 100);
-	  HAL_Delay(5);
-  }
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {//fork deneme
+  {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(htim1.Instance->CNT == motorControl.PulseCenter) // Timer'ın count değeri, duty cycle'ın yarısına eşitse girer
+	  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 	  {
 
-		  motorControl.A_Out = HAL_COMP_GetOutputLevel(&hcomp1);
-		  motorControl.B_Out = HAL_COMP_GetOutputLevel(&hcomp3);
-		  motorControl.C_Out = HAL_COMP_GetOutputLevel(&hcomp5);
+		  switch(drive_Stage)
+		  {
+		  	  case START_UP:
+		  	  {
+		  		  Start_Up_Motor();
 
-//		  motorControl.RotorPosition = (motorControl.C_Out << 2) + (motorControl.B_Out << 1) + (motorControl.A_Out);
-//
-//		  if(motorControl.RotorPosition == motorControl.LastPosition + 1)	//Bu yapı State_C_B'den sonra çalışmaz, düşün.
-//		  {
-//			  Set_Motor_State(State, motorControl.DutyCycle);
-//		  }
+		  		  break;
+		  	  }
+
+		  	  case ALIGN:
+		  	  {
+		  		  Align_Motor();
+
+		  		  break;
+		  	  }
+
+		  	  case RUN:
+			  {
+				  Run_Motor();
+
+		  		  break;
+			  }
+
+		  	  default:
+		  		  break;
+		  }
 	  }
   }
   /* USER CODE END 3 */
@@ -449,7 +449,7 @@ static void MX_TIM4_Init(void)
   htim4.Instance = TIM4;
   htim4.Init.Prescaler = 72-1;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 50-1;
+  htim4.Init.Period = 1000-1;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)

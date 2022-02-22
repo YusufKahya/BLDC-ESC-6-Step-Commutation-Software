@@ -18,41 +18,104 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
+RCC_PeriphCLKInitTypeDef PeriphClkInit;
+
 	typedef struct
 	{
+		uint8_t State;
 
-		uint8_t DutyCycle;
-		uint8_t RotorPosition;
-		uint8_t LastPosition;
+		uint8_t Duty_Cycle;
+		uint8_t Rotor_Position;
+		uint8_t Last_Trigger;
 
 		uint32_t A_Out;
 		uint32_t B_Out;
 		uint32_t C_Out;
 
 		uint32_t Signal;
-		uint32_t MaxSignal;
+		uint32_t Max_Signal;
 
-		uint32_t PulseCenter;
-
+		uint32_t Pulse_Center;
 	}MotorControl;
 
-	enum Control
+	typedef struct
 	{
-		State_A_B = 1,
-		State_A_C,
-		State_B_C,
-		State_B_A,
-		State_C_A,
-		State_C_B,
+		uint8_t Duty_Cycle;
+		uint8_t Tour;
+		uint8_t Delay_MilliSeconds;
+
+		uint32_t PWM_Frequency;
+		uint8_t  State;
+		uint32_t Counter;
+
+		uint16_t AlignCoefficient;
+	}StartUp;
+
+	enum Trigger_Sequence
+	{
+		State_A_B_Out,
+		State_A_C_Out,
+		State_B_C_Out,
+		State_B_A_Out,
+		State_C_A_Out,
+		State_C_B_Out,
 	};
 
-	MotorControl motorControl;
-	enum Control State;
+//	enum Rotor_Sequence
+//	{
+//		StartNull,
+//		State_A_C_In,// 2
+//		State_B_A_In,// 4
+//		State_B_C_In,// 3
+//		State_C_B_In,// 6
+//		State_A_B_In,// 1
+//		State_C_A_In,// 5
+//		StopNull
+//	};
 
-	// Fonksiyon Prototipleri//
+	enum Rotor_Sequence
+	{
+		StartNull,
+		State_C_A_In,// 4
+		State_B_A_In,// 3
+		State_C_B_In,// 5
+		State_A_C_In,// 1
+		State_B_C_In,// 2
+		State_A_B_In,// 0
+		StopNull
+	};
+
+	enum Drive_Stage
+	{
+		START_UP,
+		ALIGN,
+		RUN
+	};
+
+	uint8_t Trigger_Control_Index[7];
+
+	MotorControl Motor_Control;
+	StartUp Start_Up;
+	enum Trigger_Sequence trigger_Sequence;
+	enum Rotor_Sequence rotor_Sequence;
+	enum Drive_Stage drive_Stage;
+
+	// Function Prototypes//
 	//***********************//
+	//Triggers Motor State
 	void Set_Motor_State(uint8_t, uint16_t);
+
+	// Initilaize Start Parameters
 	void PeripheralsStart();
+
+	// First Stage
+	void Start_Up_Motor();
+
+	// Second Stage
+	void Align_Motor();
+
+	// Last Stage
+	void Run_Motor();
 	//***********************//
 
 #endif /* INC_SIXSTEPCOMMUTATION_H_ */

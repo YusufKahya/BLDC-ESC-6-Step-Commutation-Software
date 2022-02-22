@@ -14,30 +14,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		timerCounter++;
 
-		if(timerCounter % 1 == 0)
-		{
-			Time.Task.Hz_20000 = 1;
-		}
-		if(timerCounter % 2 == 0)
-		{
-			Time.Task.Hz_10000 = 1;
-		}
-		if(timerCounter % 10 == 0)
-		{
-			Time.Task.Hz_2000 = 1;
-		}
-		if(timerCounter % 20 == 0)
-		{
-			Time.Task.Hz_1000 = 1;
-		}
-		if(timerCounter % 100 == 0)
-		{
-			Time.Task.Hz_200 = 1;
-		}
-		if(timerCounter % 200 == 0)
-		{
-			Time.Task.Hz_100 = 1;
-		}
+//		if(timerCounter % 1 == 0)
+//		{
+//			Time.Task.Hz_20000 = 1;
+//		}
+//		if(timerCounter % 2 == 0)
+//		{
+//			Time.Task.Hz_10000 = 1;
+//		}
+//		if(timerCounter % 10 == 0)
+//		{
+//			Time.Task.Hz_2000 = 1;
+//		}
+//		if(timerCounter % 20 == 0)
+//		{
+//			Time.Task.Hz_1000 = 1;
+//		}
+//		if(timerCounter % 100 == 0)
+//		{
+//			Time.Task.Hz_200 = 1;
+//		}
+//		if(timerCounter % 200 == 0)
+//		{
+//			Time.Task.Hz_100 = 1;
+//		}
 
 	}
 }

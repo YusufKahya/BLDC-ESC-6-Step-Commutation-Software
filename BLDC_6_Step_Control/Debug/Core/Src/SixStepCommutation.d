@@ -29,7 +29,8 @@ Core/Src/SixStepCommutation.o: ../Core/Src/SixStepCommutation.c \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_pwr_ex.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h \
- ../Core/Inc/SixStepCommutation.h
+ ../Core/Inc/SixStepCommutation.h ../Core/Inc/TimeTask.h \
+ ../Core/Inc/main.h
 
 ../Core/Inc/main.h:
 
@@ -94,3 +95,7 @@ Core/Src/SixStepCommutation.o: ../Core/Src/SixStepCommutation.c \
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h:
 
 ../Core/Inc/SixStepCommutation.h:
+
+../Core/Inc/TimeTask.h:
+
+../Core/Inc/main.h:
