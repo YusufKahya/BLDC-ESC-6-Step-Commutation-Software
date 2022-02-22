@@ -53,6 +53,7 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
 	enum Trigger_Sequence
 	{
+		NullStart,
 		State_A_B_Out,
 		State_A_C_Out,
 		State_B_C_Out,
@@ -61,27 +62,15 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		State_C_B_Out,
 	};
 
-//	enum Rotor_Sequence
-//	{
-//		StartNull,
-//		State_A_C_In,// 2
-//		State_B_A_In,// 4
-//		State_B_C_In,// 3
-//		State_C_B_In,// 6
-//		State_A_B_In,// 1
-//		State_C_A_In,// 5
-//		StopNull
-//	};
-
 	enum Rotor_Sequence
 	{
 		StartNull,
-		State_C_A_In,// 4
-		State_B_A_In,// 3
-		State_C_B_In,// 5
-		State_A_C_In,// 1
-		State_B_C_In,// 2
-		State_A_B_In,// 0
+		State_A_C_In,	// 2
+		State_B_A_In,	// 4
+		State_B_C_In,	// 3
+		State_C_B_In,	// 6
+		State_A_B_In,	// 1
+		State_C_A_In,	// 5
 		StopNull
 	};
 

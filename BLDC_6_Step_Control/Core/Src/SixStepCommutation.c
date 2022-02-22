@@ -47,12 +47,14 @@ void PeripheralsStart()
 
 	  trigger_Sequence = 1;
 
-	  Trigger_Control_Index[1] = State_A_B_In;
-	  Trigger_Control_Index[2] = State_A_C_In;
+	  Trigger_Control_Index[1] = State_B_A_In;
+	  Trigger_Control_Index[2] = State_C_B_In;
 	  Trigger_Control_Index[3] = State_B_C_In;
-	  Trigger_Control_Index[4] = State_B_A_In;
-	  Trigger_Control_Index[5] = State_C_A_In;
-	  Trigger_Control_Index[6] = State_C_B_In;
+	  Trigger_Control_Index[4] = State_C_A_In;
+	  Trigger_Control_Index[5] = State_A_C_In;
+	  Trigger_Control_Index[6] = State_A_B_In;
+
+	  drive_Stage = START_UP;
 }
 
 void Start_Up_Motor()
@@ -101,9 +103,9 @@ void Run_Motor()
 	  Motor_Control.B_Out = HAL_COMP_GetOutputLevel(&hcomp3) >> 30;
 	  Motor_Control.C_Out = HAL_COMP_GetOutputLevel(&hcomp5) >> 30;
 
-	  Motor_Control.Rotor_Position = (Motor_Control.A_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.C_Out);
+	  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
 
-	  if(Trigger_Control_Index[Motor_Control.Rotor_Position] == (Motor_Control.Last_Trigger % 5) + 1)
+	  if(Trigger_Control_Index[Motor_Control.Rotor_Position] == (Trigger_Control_Index[Motor_Control.Last_Trigger] % 6) + 1)
 	  {
 		  Set_Motor_State(Motor_Control.Rotor_Position, Motor_Control.Duty_Cycle);
 	  }
