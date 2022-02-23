@@ -94,6 +94,7 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 	};
 
 	uint8_t Trigger_Control_Index[7];
+	uint8_t Start_Align_Index[7];
 
 	MotorControl Motor_Control;
 	StartUp Start_Up;

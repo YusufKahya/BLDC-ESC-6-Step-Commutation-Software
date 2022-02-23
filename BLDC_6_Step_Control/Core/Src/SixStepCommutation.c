@@ -54,6 +54,13 @@ void PeripheralsStart()
 	  Trigger_Control_Index[5] = State_A_C_In;
 	  Trigger_Control_Index[6] = State_A_B_In;
 
+	  Start_Align_Index[1] = State_C_A_Out;
+	  Start_Align_Index[2] = State_A_B_Out;
+	  Start_Align_Index[3] = State_B_C_Out;
+	  Start_Align_Index[4] = State_A_C_Out;
+	  Start_Align_Index[5] = State_C_B_Out;
+	  Start_Align_Index[6] = State_B_A_Out;
+
 	  drive_Stage = START_UP;
 
 	  HAL_TIM_Base_Start_IT(&htim4);
@@ -68,7 +75,7 @@ void Start_Up_Motor()
 
 		if(i < Start_Up.Tour*6)
 		{
-			Set_Motor_State(trigger_Sequence, Start_Up.Duty_Cycle);
+			Set_Motor_State(Start_Align_Index[trigger_Sequence], Start_Up.Duty_Cycle);
 			trigger_Sequence = (trigger_Sequence % 6) + 1;
 
 			i++;
@@ -83,7 +90,6 @@ void Start_Up_Motor()
 		Start_Up_Time_Task = 0;
 	}
 
-
 }
 
 void Align_Motor()
@@ -95,7 +101,7 @@ void Align_Motor()
 
 		if(j < Start_Up.Tour*Start_Up.AlignCoefficient*6)
 		{
-			Set_Motor_State(trigger_Sequence, Start_Up.AlignDutyCycle);
+			Set_Motor_State(Start_Align_Index[trigger_Sequence], Start_Up.AlignDutyCycle);
 			trigger_Sequence = (trigger_Sequence % 6) + 1;
 
 			j++;
@@ -109,7 +115,6 @@ void Align_Motor()
 
 		Start_Up_Time_Task = 0;
 	}
-
 
 }
 
@@ -215,8 +220,3 @@ void Set_Motor_State(uint8_t State, uint16_t DutyCycle)
 
 	}
 }
-
-//void Trigger()
-//{
-//
-//}

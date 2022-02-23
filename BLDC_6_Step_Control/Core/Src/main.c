@@ -121,7 +121,7 @@ int main(void)
 	  {
 		  switch(drive_Stage)
 		  {
-		  	  case START_UP:	// kör sürüşteki tetikleme sırası nasıl ?
+		  	  case START_UP:
 		  	  {
 		  		  Start_Up_Motor();
 
@@ -135,7 +135,7 @@ int main(void)
 		  		  break;
 		  	  }
 
-		  	  case RUN:			// AC-AB-CB-CA-BA-BC
+		  	  case RUN:
 			  {
 				  Run_Motor();
 
