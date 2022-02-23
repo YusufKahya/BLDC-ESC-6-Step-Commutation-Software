@@ -1,8 +1,8 @@
 /*
- * SixStepCommutation.h
+ * SixStepCommutation.c
  *
  *  Created on: 17 Şub 2022
- *      Author: ysfkh
+ *      Author: YusufKahya
  */
 
 #include "main.h"
@@ -11,8 +11,6 @@
 
 void PeripheralsStart()
 {
-	  HAL_TIM_Base_Start_IT(&htim4);	// Time Task için gerekli global interrupt başlatılıyor
-
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);	// Phase A High
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);	// Phase B High
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);	// Phase C High
@@ -20,11 +18,11 @@ void PeripheralsStart()
 	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);	// Phase B Low
 	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);	// Phase C Low
 
-	  HAL_COMP_Start(&hcomp1);	// Phase A - Neutral Point
-	  HAL_COMP_Start(&hcomp3);  // Phase B - Neutral Point
-	  HAL_COMP_Start(&hcomp5);  // Phase C - Neutral Point
+	  HAL_COMP_Start(&hcomp1);
+	  HAL_COMP_Start(&hcomp3);
+	  HAL_COMP_Start(&hcomp5);
 
-	  Motor_Control.Duty_Cycle = 50;	// Default %50 Duty Cycle
+	  Motor_Control.Duty_Cycle = 50;
 	  Motor_Control.Pulse_Center = 0;
 
 	  Motor_Control.A_Out = 0;
@@ -33,7 +31,7 @@ void PeripheralsStart()
 
 	  Motor_Control.Rotor_Position = 0;
 	  Motor_Control.Last_Trigger = 0;
-	  Motor_Control.State = 0;
+	  Motor_Control.State = 1;
 
 	  Motor_Control.Signal = 0;
 	  Motor_Control.Max_Signal = 0;
@@ -42,10 +40,12 @@ void PeripheralsStart()
 	  Start_Up.Delay_MilliSeconds = 5;
 	  Start_Up.Tour = 10;
 //	  Start_Up.PWM_Frequency = ( PeriphClkInit.Tim1ClockSelection/(htim1.Init.Period+1)*(htim1.Init.Prescaler+1));
-	  Start_Up.State = 0;
-	  Start_Up.AlignCoefficient = 5;
+	  Start_Up.State = 1;
+	  Start_Up.AlignCoefficient = 2;
+	  Start_Up.AlignDutyCycle = 80;
 
 	  trigger_Sequence = 1;
+//	  start_Align_Sequence = 1;
 
 	  Trigger_Control_Index[1] = State_B_A_In;
 	  Trigger_Control_Index[2] = State_C_B_In;
@@ -55,46 +55,62 @@ void PeripheralsStart()
 	  Trigger_Control_Index[6] = State_A_B_In;
 
 	  drive_Stage = START_UP;
+
+	  HAL_TIM_Base_Start_IT(&htim4);
 }
 
 void Start_Up_Motor()
 {
-	int i = 0;
+	static int i = 0;
 
-	while(i < Start_Up.Tour)
+	if(Start_Up_Time_Task == 1)
 	{
-		Start_Up.Counter = timerCounter % Start_Up.Delay_MilliSeconds;
 
-		if(Start_Up.Counter == 0)
+		if(i < Start_Up.Tour*6)
 		{
-			Set_Motor_State(Start_Up.State, Start_Up.Duty_Cycle);
-			Start_Up.State = (Start_Up.State + 1) % 6;
+			Set_Motor_State(trigger_Sequence, Start_Up.Duty_Cycle);
+			trigger_Sequence = (trigger_Sequence % 6) + 1;
 
 			i++;
 		}
+
+		else if(i == Start_Up.Tour*6)
+		{
+			drive_Stage = ALIGN;
+			i = 0;
+		}
+
+		Start_Up_Time_Task = 0;
 	}
 
-	drive_Stage = ALIGN;
+
 }
 
 void Align_Motor()
 {
-	int i = 0;
+	static int j = 0;
 
-	while(i < Start_Up.Tour*Start_Up.AlignCoefficient)
+	if(Start_Up_Time_Task == 1)
 	{
-		Start_Up.Counter = timerCounter % Start_Up.Delay_MilliSeconds;
 
-		if(Start_Up.Counter == 0)
+		if(j < Start_Up.Tour*Start_Up.AlignCoefficient*6)
 		{
-			Set_Motor_State(Start_Up.State, Start_Up.Duty_Cycle);
-			Start_Up.State = (Start_Up.State + 1) % 6;
+			Set_Motor_State(trigger_Sequence, Start_Up.AlignDutyCycle);
+			trigger_Sequence = (trigger_Sequence % 6) + 1;
 
-			i++;
+			j++;
 		}
+
+		else if(j == Start_Up.Tour*Start_Up.AlignCoefficient*6)
+		{
+			drive_Stage = RUN;
+			j = 0;
+		}
+
+		Start_Up_Time_Task = 0;
 	}
 
-	drive_Stage = RUN;
+
 }
 
 void Run_Motor()

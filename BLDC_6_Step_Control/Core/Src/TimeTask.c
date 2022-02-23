@@ -2,11 +2,12 @@
  * TimeTask.c
  *
  *  Created on: Feb 17, 2022
- *      Author: ysfkh
+ *      Author: YusufKahya
  */
 
 #include "TimeTask.h"
 #include "SixStepCommutation.h"
+
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -14,6 +15,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		timerCounter++;
 
+		if(timerCounter % Start_Up.Delay_MilliSeconds == 1 )
+		{
+			Start_Up_Time_Task = 1;
+		}
+
+//		if(timerCounter & 5 == 0)
+//		{
+//			Time.Task.Hz_5 = 1;
+//		}
 //		if(timerCounter % 1 == 0)
 //		{
 //			Time.Task.Hz_20000 = 1;

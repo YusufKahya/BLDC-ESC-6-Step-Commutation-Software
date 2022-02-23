@@ -119,10 +119,9 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 	  {
-
 		  switch(drive_Stage)
 		  {
-		  	  case START_UP:
+		  	  case START_UP:	// kör sürüşteki tetikleme sırası nasıl ?
 		  	  {
 		  		  Start_Up_Motor();
 
@@ -136,7 +135,7 @@ int main(void)
 		  		  break;
 		  	  }
 
-		  	  case RUN:
+		  	  case RUN:			// AC-AB-CB-CA-BA-BC
 			  {
 				  Run_Motor();
 

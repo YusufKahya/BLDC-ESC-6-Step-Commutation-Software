@@ -2,7 +2,7 @@
  * SixStepCommutation.h
  *
  *  Created on: 17 Şub 2022
- *      Author: ysfkh
+ *      Author: YusufKahya
  */
 
 #include <stdbool.h>
@@ -44,11 +44,12 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint8_t Tour;
 		uint8_t Delay_MilliSeconds;
 
-		uint32_t PWM_Frequency;
+//		uint32_t PWM_Frequency;
 		uint8_t  State;
 		uint32_t Counter;
 
 		uint16_t AlignCoefficient;
+		uint16_t AlignDutyCycle;
 	}StartUp;
 
 	enum Trigger_Sequence
@@ -73,6 +74,17 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		State_C_A_In,	// 5
 		StopNull
 	};
+//
+//	enum Start_Align_Sequence
+//	{
+//		null,
+//		State_C_A_Str_Alg,	// 5
+//		State_A_B_Str_Alg,	// 1
+//		State_B_C_Str_Alg,	// 3
+//		State_A_C_Str_Alg,	// 2
+//		State_C_B_Str_Alg,	// 6
+//		State_B_A_Str_Alg,	// 4
+//	};
 
 	enum Drive_Stage
 	{
@@ -88,6 +100,7 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 	enum Trigger_Sequence trigger_Sequence;
 	enum Rotor_Sequence rotor_Sequence;
 	enum Drive_Stage drive_Stage;
+//	enum Start_Align_Sequence start_Align_Sequence;
 
 	// Function Prototypes//
 	//***********************//

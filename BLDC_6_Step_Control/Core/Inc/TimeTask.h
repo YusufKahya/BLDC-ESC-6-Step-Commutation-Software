@@ -2,7 +2,7 @@
  * TimeTask.h
  *
  *  Created on: Feb 17, 2022
- *      Author: ysfkh
+ *      Author: YusufKahya
  */
 
 #include "main.h"
@@ -19,15 +19,14 @@ typedef union
 {
 	struct
 	{
-		uint8_t Hz_20000 : 1;
-		uint8_t Hz_10000 : 1;
-		uint8_t Hz_2000 : 1;
 		uint8_t Hz_1000 : 1;
 		uint8_t Hz_200 : 1;
 		uint8_t Hz_100 : 1;
+		uint8_t Hz_5 : 1;
 	}Task;
 
 }time_task_union;
+uint32_t Start_Up_Time_Task;
 
  time_task_union Time;
 
