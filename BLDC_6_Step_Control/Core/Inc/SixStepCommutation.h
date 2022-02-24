@@ -10,6 +10,8 @@
 #ifndef INC_SIXSTEPCOMMUTATION_H_
 #define INC_SIXSTEPCOMMUTATION_H_
 
+#define MOTOR_CONTROL_TASK_HZ 20000.0f
+
 COMP_HandleTypeDef hcomp1;
 COMP_HandleTypeDef hcomp3;
 COMP_HandleTypeDef hcomp5;
@@ -20,13 +22,30 @@ TIM_HandleTypeDef htim4;
 
 RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
+	typedef enum
+	{
+		NullStart,
+		State_A_C,
+		State_B_A,
+		State_B_C,
+		State_C_B,
+		State_A_B,
+		State_C_A,
+	}Trigger_Sequence;
+
+	typedef enum
+	{
+		START_UP,
+		ALIGN,
+		RUN
+	}Drive_Stage;
+
 	typedef struct
 	{
 		uint8_t State;
 
 		uint8_t Duty_Cycle;
 		uint8_t Rotor_Position;
-		uint8_t Last_Trigger;
 
 		uint32_t A_Out;
 		uint32_t B_Out;
@@ -36,13 +55,22 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint32_t Max_Signal;
 
 		uint32_t Pulse_Center;
+
+		uint8_t System_Enable;
+
+		uint32_t ControlCnt;
+
+		uint8_t motor_state_index;
+
+		Drive_Stage drive_Stage;
+
 	}MotorControl;
 
 	typedef struct
 	{
 		uint8_t Duty_Cycle;
-		uint8_t Tour;
-		uint8_t Delay_MilliSeconds;
+		uint16_t Tour;
+		float Delay_Seconds;
 
 //		uint32_t PWM_Frequency;
 		uint8_t  State;
@@ -52,55 +80,10 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint16_t AlignDutyCycle;
 	}StartUp;
 
-	enum Trigger_Sequence
-	{
-		NullStart,
-		State_A_B_Out,
-		State_A_C_Out,
-		State_B_C_Out,
-		State_B_A_Out,
-		State_C_A_Out,
-		State_C_B_Out,
-	};
-
-	enum Rotor_Sequence
-	{
-		StartNull,
-		State_A_C_In,	// 2
-		State_B_A_In,	// 4
-		State_B_C_In,	// 3
-		State_C_B_In,	// 6
-		State_A_B_In,	// 1
-		State_C_A_In,	// 5
-		StopNull
-	};
-//
-//	enum Start_Align_Sequence
-//	{
-//		null,
-//		State_C_A_Str_Alg,	// 5
-//		State_A_B_Str_Alg,	// 1
-//		State_B_C_Str_Alg,	// 3
-//		State_A_C_Str_Alg,	// 2
-//		State_C_B_Str_Alg,	// 6
-//		State_B_A_Str_Alg,	// 4
-//	};
-
-	enum Drive_Stage
-	{
-		START_UP,
-		ALIGN,
-		RUN
-	};
-
-	uint8_t Trigger_Control_Index[7];
-	uint8_t Start_Align_Index[7];
+	const extern uint8_t Trigger_Control_State[6];
 
 	MotorControl Motor_Control;
 	StartUp Start_Up;
-	enum Trigger_Sequence trigger_Sequence;
-	enum Rotor_Sequence rotor_Sequence;
-	enum Drive_Stage drive_Stage;
 //	enum Start_Align_Sequence start_Align_Sequence;
 
 	// Function Prototypes//

@@ -15,14 +15,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		timerCounter++;
 
-		if(timerCounter % Start_Up.Delay_MilliSeconds == 1 )
-		{
-			Start_Up_Time_Task = 1;
-		}
-
-//		if(timerCounter & 5 == 0)
+//		if(timerCounter % Start_Up.Delay_Seconds == 1 )
 //		{
-//			Time.Task.Hz_5 = 1;
+//			Start_Up_Time_Task = 1;
+//		}
+//
+//		if(timerCounter % 1 == 0)
+//		{
+//			Time.Task.Hz_1000 = 1;
 //		}
 //		if(timerCounter % 1 == 0)
 //		{

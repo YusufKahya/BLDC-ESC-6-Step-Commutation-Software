@@ -117,33 +117,39 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 	  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 	  {
-		  switch(drive_Stage)
+
+		  if(Motor_Control.System_Enable == 1)
 		  {
-		  	  case START_UP:
-		  	  {
-		  		  Start_Up_Motor();
 
-		  		  break;
-		  	  }
-
-		  	  case ALIGN:
-		  	  {
-		  		  Align_Motor();
-
-		  		  break;
-		  	  }
-
-		  	  case RUN:
+			  switch(Motor_Control.drive_Stage)
 			  {
-				  Run_Motor();
+				  case START_UP:
+				  {
+					  Start_Up_Motor();
 
-		  		  break;
+					  break;
+				  }
+
+//				  case ALIGN:
+//				  {
+//					  Align_Motor();
+//
+//					  break;
+//				  }
+
+				  case RUN:
+				  {
+					  Run_Motor();
+
+					  break;
+				  }
+
+				  default:
+					  break;
 			  }
-
-		  	  default:
-		  		  break;
 		  }
 	  }
   }
