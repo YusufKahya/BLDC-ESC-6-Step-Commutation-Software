@@ -73,7 +73,7 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint16_t Align_DutyCycle;
 	}StartUp;
 
-	const extern uint8_t Trigger_Control_State[7];
+	const extern uint8_t Trigger_Control_State[6];
 
 	MotorControl Motor_Control;
 	StartUp Start_Up;

@@ -9,7 +9,7 @@
 #include "SixStepCommutation.h"
 #include "TimeTask.h"
 
-const uint8_t Trigger_Control_State[7] = {NullStart,State_A_B,State_A_C,State_B_C,State_B_A,State_C_A,State_C_B};
+const uint8_t Trigger_Control_State[6] = {State_A_B,State_A_C,State_B_C,State_B_A,State_C_A,State_C_B};
 
 void PeripheralsStart()
 {
@@ -28,7 +28,6 @@ void PeripheralsStart()
 	  Start_Up.Duty_Cycle = 50;
 	  Start_Up.Delay_Seconds = 0.00005f; // 50 mikro saniye (20k task'ta yapılabilecek minimum süre)
 	  Start_Up.Tour = 3;
-	  Motor_Control.Motor_State_Index = 1;
 
 	  Start_Up.Align_Coefficient = 2;
 	  Start_Up.Align_DutyCycle = 50;
@@ -51,12 +50,12 @@ void PeripheralsStart()
 
 void Stop_Motor()
 {
-	Set_Motor_State(0,0);
-	Set_Motor_State(1,0);
-	Set_Motor_State(2,0);
-	Set_Motor_State(3,0);
-	Set_Motor_State(4,0);
-	Set_Motor_State(5,0);
+	Set_Motor_State(Trigger_Control_State[0],0);
+	Set_Motor_State(Trigger_Control_State[1],0);
+	Set_Motor_State(Trigger_Control_State[2],0);
+	Set_Motor_State(Trigger_Control_State[3],0);
+	Set_Motor_State(Trigger_Control_State[4],0);
+	Set_Motor_State(Trigger_Control_State[5],0);
 
 	Motor_Control.Drive_Stage = START_UP;
 }
@@ -75,10 +74,11 @@ void Start_Up_Motor()
 		{
 			Motor_Control.Drive_Stage = ALIGN;
 			Tour_Counter = 0;
+			Motor_Control.Motor_State_Index = 0;
 		}
 		else
 		{
-			Motor_Control.Motor_State_Index = (Motor_Control.Motor_State_Index % 6) + 1;
+			Motor_Control.Motor_State_Index = (Motor_Control.Motor_State_Index + 1) % 6;
 		}
 	}
 }
@@ -100,7 +100,7 @@ void Align_Motor()
 		}
 		else
 		{
-			Motor_Control.Motor_State_Index = (Motor_Control.Motor_State_Index % 6) + 1;
+			Motor_Control.Motor_State_Index = (Motor_Control.Motor_State_Index + 1) % 6;
 		}
 	}
 }
@@ -115,7 +115,7 @@ void Run_Motor()
 
 	  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
 
-	  Next_State_Index = (Motor_Control.Motor_State_Index % 6) + 1;
+	  Next_State_Index = (Motor_Control.Motor_State_Index + 1) % 6;
 
 	  if(Motor_Control.Rotor_Position == Trigger_Control_State[Next_State_Index])
 	  {
