@@ -9,10 +9,32 @@
 #include "SixStepCommutation.h"
 #include "TimeTask.h"
 
-const uint8_t Trigger_Control_State[6] = {State_A_B,State_A_C,State_B_C,State_B_A,State_C_A,State_C_B};
+const uint8_t Trigger_Control_State[7] = {NullStart,State_A_B,State_A_C,State_B_C,State_B_A,State_C_A,State_C_B};
 
 void PeripheralsStart()
 {
+	  Motor_Control.Duty_Cycle = 30;
+	  Motor_Control.Pulse_Center = 0;
+
+	  Motor_Control.A_Out = 0;
+	  Motor_Control.B_Out = 0;
+	  Motor_Control.C_Out = 0;
+
+	  Motor_Control.Rotor_Position = 0;
+
+	  Motor_Control.Signal = 0;
+	  Motor_Control.Max_Signal = 0;
+
+	  Start_Up.Duty_Cycle = 50;
+	  Start_Up.Delay_Seconds = 0.00005f; // 50 mikro saniye (20k task'ta yapılabilecek minimum süre)
+	  Start_Up.Tour = 3;
+	  Motor_Control.Motor_State_Index = 1;
+
+	  Start_Up.Align_Coefficient = 2;
+	  Start_Up.Align_DutyCycle = 50;
+
+	  Motor_Control.Drive_Stage = START_UP;
+
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);	// Phase A High
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);	// Phase B High
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);	// Phase C High
@@ -24,97 +46,67 @@ void PeripheralsStart()
 	  HAL_COMP_Start(&hcomp3);
 	  HAL_COMP_Start(&hcomp5);
 
-	  Motor_Control.Duty_Cycle = 30;
-	  Motor_Control.Pulse_Center = 0;
-
-	  Motor_Control.A_Out = 0;
-	  Motor_Control.B_Out = 0;
-	  Motor_Control.C_Out = 0;
-
-	  Motor_Control.Rotor_Position = 0;
-	  Motor_Control.State = 1;
-
-	  Motor_Control.Signal = 0;
-	  Motor_Control.Max_Signal = 0;
-
-	  Start_Up.Duty_Cycle = 50;
-	  Start_Up.Delay_Seconds = 0.00001f;
-	  Start_Up.Tour = 3;
-//	  Start_Up.PWM_Frequency = ( PeriphClkInit.Tim1ClockSelection/(htim1.Init.Period+1)*(htim1.Init.Prescaler+1));
-	  Start_Up.State = 1;
-	  Start_Up.AlignCoefficient = 2;
-	  Start_Up.AlignDutyCycle = 50;
-
-	  Motor_Control.drive_Stage = START_UP;
-
 	  HAL_TIM_Base_Start_IT(&htim4);
+}
+
+void Stop_Motor()
+{
+	Set_Motor_State(0,0);
+	Set_Motor_State(1,0);
+	Set_Motor_State(2,0);
+	Set_Motor_State(3,0);
+	Set_Motor_State(4,0);
+	Set_Motor_State(5,0);
+
+	Motor_Control.Drive_Stage = START_UP;
 }
 
 void Start_Up_Motor()
 {
-	static int tour_Cnt = 0;
+	static int Tour_Counter = 0;
 
-	if(Motor_Control.ControlCnt++ >= MOTOR_CONTROL_TASK_HZ*Start_Up.Delay_Seconds)
+	if(Motor_Control.Control_Counter++ >= MOTOR_CONTROL_TASK_HZ*Start_Up.Delay_Seconds)
 	{
-		Motor_Control.ControlCnt = 0;
+		Motor_Control.Control_Counter = 0;
 
-		Set_Motor_State(Trigger_Control_State[Motor_Control.motor_state_index], Start_Up.Duty_Cycle);
+		Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Start_Up.Duty_Cycle);
 
-		if( (Trigger_Control_State[Motor_Control.motor_state_index] == State_C_B) && tour_Cnt++ >= Start_Up.Tour)
+		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour)	// BU DA
 		{
-			Motor_Control.drive_Stage = RUN;
-			tour_Cnt = 0;
+			Motor_Control.Drive_Stage = ALIGN;
+			Tour_Counter = 0;
 		}
-
 		else
 		{
-			Motor_Control.motor_state_index = (Motor_Control.motor_state_index + 1) % 6;
+			Motor_Control.Motor_State_Index = (Motor_Control.Motor_State_Index % 6) + 1;
 		}
-
-		Start_Up_Time_Task = 0;
 	}
-
 }
 
-//void Align_Motor()
-//{
-//	static int j = 0;
-//
-//	if(Motor_Control.ControlCnt++ >= MOTOR_CONTROL_TASK_HZ*Start_Up.Delay_Seconds)
-//	{
-//		Motor_Control.ControlCnt = 0;
-//
-//		if(j < Start_Up.Tour*Start_Up.AlignCoefficient*6)
-//		{
-//			Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
-//		    Motor_Control.B_Out = HAL_COMP_GetOutputLevel(&hcomp3) >> 30;
-//		    Motor_Control.C_Out = HAL_COMP_GetOutputLevel(&hcomp5) >> 30;
-//
-//		    Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
-//
-//		    if(Trigger_Control_Index[Motor_Control.Rotor_Position] == (Trigger_Control_Index[Motor_Control.Last_Trigger] % 6) + 1)
-//		    {
-//			    Set_Motor_State(Motor_Control.Rotor_Position, Motor_Control.Duty_Cycle);
-//
-//				j++;
-//		    }
-//
-//		}
-//
-//		else if(j == Start_Up.Tour*Start_Up.AlignCoefficient*6)
-//		{
-//			Motor_Control.drive_Stage = RUN;
-//			j = 0;
-//		}
-//
-//		Start_Up_Time_Task = 0;
-//	}
-//
-//}
+void Align_Motor()
+{
+	static int Tour_Counter = 0;
+
+	if(Motor_Control.Control_Counter++ >= MOTOR_CONTROL_TASK_HZ*Start_Up.Delay_Seconds)
+	{
+		Motor_Control.Control_Counter = 0;
+
+		Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Start_Up.Align_DutyCycle);
+
+		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*Start_Up.Align_Coefficient)
+		{
+			Motor_Control.Drive_Stage = RUN;
+			Tour_Counter = 0;
+		}
+		else
+		{
+			Motor_Control.Motor_State_Index = (Motor_Control.Motor_State_Index % 6) + 1;
+		}
+	}
+}
 
 void Run_Motor()
 {
-
 	  static uint8_t Next_State_Index = 0;
 
 	  Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
@@ -123,13 +115,13 @@ void Run_Motor()
 
 	  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
 
-	  Next_State_Index = (Motor_Control.motor_state_index + 1) % 6;
+	  Next_State_Index = (Motor_Control.Motor_State_Index % 6) + 1;
 
 	  if(Motor_Control.Rotor_Position == Trigger_Control_State[Next_State_Index])
 	  {
-		  Motor_Control.motor_state_index = Next_State_Index;
+		  Motor_Control.Motor_State_Index = Next_State_Index;
 
-		  Set_Motor_State(Trigger_Control_State[Motor_Control.motor_state_index], Motor_Control.Duty_Cycle);
+		  Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Motor_Control.Duty_Cycle);
 	  }
 }
 

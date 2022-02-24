@@ -38,11 +38,11 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		START_UP,
 		ALIGN,
 		RUN
-	}Drive_Stage;
+	}DriveStage;
 
 	typedef struct
 	{
-		uint8_t State;
+		uint8_t System_Enable;
 
 		uint8_t Duty_Cycle;
 		uint8_t Rotor_Position;
@@ -56,14 +56,11 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
 		uint32_t Pulse_Center;
 
-		uint8_t System_Enable;
+		uint32_t Control_Counter;
 
-		uint32_t ControlCnt;
+		uint8_t Motor_State_Index;
 
-		uint8_t motor_state_index;
-
-		Drive_Stage drive_Stage;
-
+		DriveStage Drive_Stage;
 	}MotorControl;
 
 	typedef struct
@@ -71,23 +68,17 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint8_t Duty_Cycle;
 		uint16_t Tour;
 		float Delay_Seconds;
-
-//		uint32_t PWM_Frequency;
-		uint8_t  State;
 		uint32_t Counter;
-
-		uint16_t AlignCoefficient;
-		uint16_t AlignDutyCycle;
+		uint16_t Align_Coefficient;
+		uint16_t Align_DutyCycle;
 	}StartUp;
 
-	const extern uint8_t Trigger_Control_State[6];
+	const extern uint8_t Trigger_Control_State[7];
 
 	MotorControl Motor_Control;
 	StartUp Start_Up;
-//	enum Start_Align_Sequence start_Align_Sequence;
 
-	// Function Prototypes//
-	//***********************//
+	// *********** Function Prototypes Start ************ //
 	//Triggers Motor State
 	void Set_Motor_State(uint8_t, uint16_t);
 
@@ -102,6 +93,9 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
 	// Last Stage
 	void Run_Motor();
-	//***********************//
+
+	// Stops Motor
+	void Stop_Motor();
+	// *********** Function Prototypes Finish ************ //
 
 #endif /* INC_SIXSTEPCOMMUTATION_H_ */
