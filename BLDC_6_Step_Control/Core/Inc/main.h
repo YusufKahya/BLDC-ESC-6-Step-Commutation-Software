@@ -58,6 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define bos_Pin GPIO_PIN_7
+#define bos_GPIO_Port GPIOA
 #define deneme_Pin GPIO_PIN_0
 #define deneme_GPIO_Port GPIOB
 #define TMS_Pin GPIO_PIN_13
