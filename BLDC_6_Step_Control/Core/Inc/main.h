@@ -58,10 +58,38 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define bos_Pin GPIO_PIN_7
-#define bos_GPIO_Port GPIOA
-#define deneme_Pin GPIO_PIN_0
-#define deneme_GPIO_Port GPIOB
+#define Phase_A_HIGH_Pin GPIO_PIN_0
+#define Phase_A_HIGH_GPIO_Port GPIOC
+#define Phase_B_HIGH_Pin GPIO_PIN_1
+#define Phase_B_HIGH_GPIO_Port GPIOC
+#define Phase_C_HIGH_Pin GPIO_PIN_2
+#define Phase_C_HIGH_GPIO_Port GPIOC
+#define Comp_A_OUT_Pin GPIO_PIN_0
+#define Comp_A_OUT_GPIO_Port GPIOA
+#define Comp_A_INP_Pin GPIO_PIN_1
+#define Comp_A_INP_GPIO_Port GPIOA
+#define Phase_B_LOW_Pin GPIO_PIN_4
+#define Phase_B_LOW_GPIO_Port GPIOA
+#define Comp_A_INM_Pin GPIO_PIN_5
+#define Comp_A_INM_GPIO_Port GPIOA
+#define Phase_A_LOW_Pin GPIO_PIN_6
+#define Phase_A_LOW_GPIO_Port GPIOA
+#define Toggle_Pin GPIO_PIN_0
+#define Toggle_GPIO_Port GPIOB
+#define Comp_C_INM_Pin GPIO_PIN_10
+#define Comp_C_INM_GPIO_Port GPIOB
+#define Comp_B_INM_Pin GPIO_PIN_12
+#define Comp_B_INM_GPIO_Port GPIOB
+#define Comp_C_INP_Pin GPIO_PIN_13
+#define Comp_C_INP_GPIO_Port GPIOB
+#define Comp_B_INP_Pin GPIO_PIN_14
+#define Comp_B_INP_GPIO_Port GPIOB
+#define Comp_C_OUT_Pin GPIO_PIN_7
+#define Comp_C_OUT_GPIO_Port GPIOC
+#define Phase_C_LOW_Pin GPIO_PIN_8
+#define Phase_C_LOW_GPIO_Port GPIOC
+#define Comp_B_Out_Pin GPIO_PIN_8
+#define Comp_B_Out_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

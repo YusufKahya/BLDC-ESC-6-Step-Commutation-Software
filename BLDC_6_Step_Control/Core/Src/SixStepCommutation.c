@@ -13,17 +13,7 @@ const uint8_t Trigger_Control_State[6] = {State_A_B,State_A_C,State_B_C,State_B_
 
 void PeripheralsStart()
 {
-	  Motor_Control.Duty_Cycle = 30;
-	  Motor_Control.Pulse_Center = 0;
-
-	  Motor_Control.A_Out = 0;
-	  Motor_Control.B_Out = 0;
-	  Motor_Control.C_Out = 0;
-
-	  Motor_Control.Rotor_Position = 0;
-
-	  Motor_Control.Signal = 0;
-	  Motor_Control.Max_Signal = 0;
+	  Motor_Control.Duty_Cycle = 40;
 
 	  Start_Up.Duty_Cycle = 50;
 	  Start_Up.Delay_Seconds = 0.00005f; // 50 mikro saniye (20k task'ta yapılabilecek minimum süre)
@@ -41,11 +31,11 @@ void PeripheralsStart()
 	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);	// Phase B Low
 	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);	// Phase C Low
 
-	  HAL_COMP_Start(&hcomp1);
-	  HAL_COMP_Start(&hcomp3);
-	  HAL_COMP_Start(&hcomp5);
+	  HAL_COMP_Start(&hcomp1);	// Phase A Out
+	  HAL_COMP_Start(&hcomp3);	// Phase B Out
+	  HAL_COMP_Start(&hcomp5);	// Phase C Out
 
-	  HAL_TIM_Base_Start_IT(&htim4);
+	  HAL_TIM_Base_Start_IT(&htim4);	// for Time Tasks
 }
 
 void Stop_Motor()
@@ -70,11 +60,10 @@ void Start_Up_Motor()
 
 		Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Start_Up.Duty_Cycle);
 
-		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour)	// BU DA
+		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*6)
 		{
 			Motor_Control.Drive_Stage = ALIGN;
 			Tour_Counter = 0;
-			Motor_Control.Motor_State_Index = 0;
 		}
 		else
 		{
@@ -93,7 +82,7 @@ void Align_Motor()
 
 		Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Start_Up.Align_DutyCycle);
 
-		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*Start_Up.Align_Coefficient)
+		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*Start_Up.Align_Coefficient*6)
 		{
 			Motor_Control.Drive_Stage = RUN;
 			Tour_Counter = 0;
@@ -107,6 +96,7 @@ void Align_Motor()
 
 void Run_Motor()
 {
+
 	  static uint8_t Next_State_Index = 0;
 
 	  Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
@@ -123,6 +113,11 @@ void Run_Motor()
 
 		  Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Motor_Control.Duty_Cycle);
 	  }
+
+//		  static int h = 0;
+//		  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
+//		  h = (h+1)%6;
+
 }
 
 void Set_Motor_State(uint8_t State, uint16_t DutyCycle)
@@ -134,68 +129,80 @@ void Set_Motor_State(uint8_t State, uint16_t DutyCycle)
 	{
 
 		case State_A_B:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,Motor_Control.Signal);		// A HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,Motor_Control.Max_Signal);	// B LOW AVTIVE
+
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,Motor_Control.Signal);		// A HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,Motor_Control.Max_Signal);	// B LOW AVTIVE
 
-			Motor_Control.Pulse_Center = htim1.Instance->CCR1 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
+			Motor_Control.Pulse_Center = htim1.Instance->CCR1 / 2;
 
 			break;
 
 		case State_A_C:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,Motor_Control.Signal);		// A HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,Motor_Control.Max_Signal);	// C LOW ACTIVE
+
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,Motor_Control.Signal);		// A HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,Motor_Control.Max_Signal);	// C LOW ACTIVE
+
+			Motor_Control.Pulse_Center = htim1.Instance->CCR1 / 2;
 
 			break;
 
 		case State_B_C:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,Motor_Control.Signal);		// B HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,Motor_Control.Max_Signal);	// C LOW ACTIVE
+
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,Motor_Control.Signal);		// B HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,Motor_Control.Max_Signal);	// C LOW ACTIVE
 
-			Motor_Control.Pulse_Center = htim1.Instance->CCR2 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
+			Motor_Control.Pulse_Center = htim1.Instance->CCR2 / 2;
 
 			break;
 
 		case State_B_A:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,Motor_Control.Signal);	// B HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,Motor_Control.Max_Signal);	// A LOW ACTIVE
+
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,Motor_Control.Signal);	// B HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,Motor_Control.Max_Signal);	// A LOW ACTIVE
+
+			Motor_Control.Pulse_Center = htim1.Instance->CCR2 / 2;
 
 			break;
 
 		case State_C_A:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,Motor_Control.Signal);	// C HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,Motor_Control.Max_Signal);	// A LOW ACTIVE
+
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,Motor_Control.Signal);	// C HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,Motor_Control.Max_Signal);	// A LOW ACTIVE
 
-			Motor_Control.Pulse_Center = htim1.Instance->CCR3 / 2;	//DutyCycle bu State'de iken değişirse kontrol güncellenir
+			Motor_Control.Pulse_Center = htim1.Instance->CCR3 / 2;
 
 			break;
 
 		case State_C_B:
-			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,Motor_Control.Signal);	// C HIGH ACTIVE
-			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,Motor_Control.Max_Signal);	// B LOW ACTIVE
+
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
 			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
+			__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,Motor_Control.Signal);	// C HIGH ACTIVE
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,Motor_Control.Max_Signal);	// B LOW ACTIVE
+
+			Motor_Control.Pulse_Center = htim1.Instance->CCR3 / 2;
 
 			break;
 

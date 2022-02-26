@@ -101,14 +101,14 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
     PA1     ------> COMP1_INP
     PA5     ------> COMP1_INM
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0;
+    GPIO_InitStruct.Pin = Comp_A_OUT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF8_COMP1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(Comp_A_OUT_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_5;
+    GPIO_InitStruct.Pin = Comp_A_INP_Pin|Comp_A_INM_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -130,17 +130,17 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
     PB14     ------> COMP3_INP
     PA8     ------> COMP3_OUT
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_14;
+    GPIO_InitStruct.Pin = Comp_B_INM_Pin|Comp_B_INP_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_8;
+    GPIO_InitStruct.Pin = Comp_B_Out_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF8_COMP3;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(Comp_B_Out_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN COMP3_MspInit 1 */
 
@@ -159,17 +159,17 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
     PB13     ------> COMP5_INP
     PC7     ------> COMP5_OUT
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_13;
+    GPIO_InitStruct.Pin = Comp_C_INM_Pin|Comp_C_INP_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_7;
+    GPIO_InitStruct.Pin = Comp_C_OUT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF7_COMP5;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(Comp_C_OUT_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN COMP5_MspInit 1 */
 
@@ -197,7 +197,7 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
     PA1     ------> COMP1_INP
     PA5     ------> COMP1_INM
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_5);
+    HAL_GPIO_DeInit(GPIOA, Comp_A_OUT_Pin|Comp_A_INP_Pin|Comp_A_INM_Pin);
 
   /* USER CODE BEGIN COMP1_MspDeInit 1 */
 
@@ -214,9 +214,9 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
     PB14     ------> COMP3_INP
     PA8     ------> COMP3_OUT
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_12|GPIO_PIN_14);
+    HAL_GPIO_DeInit(GPIOB, Comp_B_INM_Pin|Comp_B_INP_Pin);
 
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8);
+    HAL_GPIO_DeInit(Comp_B_Out_GPIO_Port, Comp_B_Out_Pin);
 
   /* USER CODE BEGIN COMP3_MspDeInit 1 */
 
@@ -233,9 +233,9 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
     PB13     ------> COMP5_INP
     PC7     ------> COMP5_OUT
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10|GPIO_PIN_13);
+    HAL_GPIO_DeInit(GPIOB, Comp_C_INM_Pin|Comp_C_INP_Pin);
 
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_7);
+    HAL_GPIO_DeInit(Comp_C_OUT_GPIO_Port, Comp_C_OUT_Pin);
 
   /* USER CODE BEGIN COMP5_MspDeInit 1 */
 
@@ -316,7 +316,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     PC1     ------> TIM1_CH2
     PC2     ------> TIM1_CH3
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2;
+    GPIO_InitStruct.Pin = Phase_A_HIGH_Pin|Phase_B_HIGH_Pin|Phase_C_HIGH_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -340,19 +340,19 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     PA6     ------> TIM3_CH1
     PC8     ------> TIM3_CH3
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_6;
+    GPIO_InitStruct.Pin = Phase_B_LOW_Pin|Phase_A_LOW_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_8;
+    GPIO_InitStruct.Pin = Phase_C_LOW_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(Phase_C_LOW_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN TIM3_MspPostInit 1 */
 
