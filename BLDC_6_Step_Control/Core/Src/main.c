@@ -119,36 +119,61 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(Motor_Control.System_Enable == 1)
 	  {
-		  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
+
+		  if(Motor_Control.Blinde_Mode == 0)
 		  {
-			  switch(Motor_Control.Drive_Stage)
+
+			  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 			  {
-				  case START_UP:
+
+				  switch(Motor_Control.Drive_Stage)
 				  {
-					  Start_Up_Motor();
 
-					  break;
+					  case START_UP:
+					  {
+						  Start_Up_Motor();
+
+						  break;
+					  }
+
+					  case ALIGN:
+					  {
+						  Align_Motor();
+
+						  break;
+					  }
+
+					  case RUN:
+					  {
+						  Run_Motor();
+
+						  break;
+					  }
+
+					  default:
+						  break;
 				  }
+		  	  }
+	  	  }
 
-				  case ALIGN:
-				  {
-					  Align_Motor();
+		  else
+		  {
 
-					  break;
-				  }
+			  if(Time.Task.Hz_1000 == 1)
+			  {
 
-				  case RUN:
-				  {
-					  Run_Motor();
+				  static int h = 0;
+				  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
+				  h = (h+1) % 6;
 
-					  break;
-				  }
+				  Motor_Control.Drive_Stage = START_UP;
 
-				  default:
-					  break;
+				  Time.Task.Hz_1000 = 0;
 			  }
+
 		  }
 	  }
+
 	  else
 	  {
 		  Stop_Motor();

@@ -44,6 +44,8 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 	{
 		uint8_t System_Enable;
 
+		uint8_t Blinde_Mode;
+
 		uint8_t Duty_Cycle;
 		uint8_t Rotor_Position;
 

@@ -135,12 +135,12 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = Comp_B_Out_Pin;
+    GPIO_InitStruct.Pin = Comp_B_OUT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF8_COMP3;
-    HAL_GPIO_Init(Comp_B_Out_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(Comp_B_OUT_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN COMP3_MspInit 1 */
 
@@ -216,7 +216,7 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
     */
     HAL_GPIO_DeInit(GPIOB, Comp_B_INM_Pin|Comp_B_INP_Pin);
 
-    HAL_GPIO_DeInit(Comp_B_Out_GPIO_Port, Comp_B_Out_Pin);
+    HAL_GPIO_DeInit(Comp_B_OUT_GPIO_Port, Comp_B_OUT_Pin);
 
   /* USER CODE BEGIN COMP3_MspDeInit 1 */
 

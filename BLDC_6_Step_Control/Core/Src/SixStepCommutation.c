@@ -60,7 +60,7 @@ void Start_Up_Motor()
 
 		Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Start_Up.Duty_Cycle);
 
-		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*6)
+		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour)
 		{
 			Motor_Control.Drive_Stage = ALIGN;
 			Tour_Counter = 0;
@@ -82,7 +82,7 @@ void Align_Motor()
 
 		Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Start_Up.Align_DutyCycle);
 
-		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*Start_Up.Align_Coefficient*6)
+		if( (Trigger_Control_State[Motor_Control.Motor_State_Index] == State_C_B) && Tour_Counter++ >= Start_Up.Tour*Start_Up.Align_Coefficient)
 		{
 			Motor_Control.Drive_Stage = RUN;
 			Tour_Counter = 0;
@@ -99,9 +99,13 @@ void Run_Motor()
 
 	  static uint8_t Next_State_Index = 0;
 
-	  Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
-	  Motor_Control.B_Out = HAL_COMP_GetOutputLevel(&hcomp3) >> 30;
-	  Motor_Control.C_Out = HAL_COMP_GetOutputLevel(&hcomp5) >> 30;
+//	  Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
+//	  Motor_Control.B_Out = HAL_COMP_GetOutputLevel(&hcomp3) >> 30;
+//	  Motor_Control.C_Out = HAL_COMP_GetOutputLevel(&hcomp5) >> 30;
+
+	  Motor_Control.A_Out = HAL_GPIO_ReadPin(Comp_A_OUT_GPIO_Port, Comp_A_OUT_Pin);
+	  Motor_Control.B_Out = HAL_GPIO_ReadPin(Comp_B_OUT_GPIO_Port, Comp_B_OUT_Pin);
+	  Motor_Control.C_Out = HAL_GPIO_ReadPin(Comp_C_OUT_GPIO_Port, Comp_C_OUT_Pin);
 
 	  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
 
@@ -113,10 +117,6 @@ void Run_Motor()
 
 		  Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Motor_Control.Duty_Cycle);
 	  }
-
-//		  static int h = 0;
-//		  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
-//		  h = (h+1)%6;
 
 }
 

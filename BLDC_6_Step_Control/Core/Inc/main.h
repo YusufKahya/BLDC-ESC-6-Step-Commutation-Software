@@ -88,8 +88,8 @@ void Error_Handler(void);
 #define Comp_C_OUT_GPIO_Port GPIOC
 #define Phase_C_LOW_Pin GPIO_PIN_8
 #define Phase_C_LOW_GPIO_Port GPIOC
-#define Comp_B_Out_Pin GPIO_PIN_8
-#define Comp_B_Out_GPIO_Port GPIOA
+#define Comp_B_OUT_Pin GPIO_PIN_8
+#define Comp_B_OUT_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
