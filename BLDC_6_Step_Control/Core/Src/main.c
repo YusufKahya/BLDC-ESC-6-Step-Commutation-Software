@@ -159,7 +159,7 @@ int main(void)
 		  else
 		  {
 
-			  if(Time.Task.Hz_1000 == 1)
+			  if(Time.Task.Hz_100 == 1)
 			  {
 
 				  static int h = 0;
@@ -168,7 +168,7 @@ int main(void)
 
 				  Motor_Control.Drive_Stage = START_UP;
 
-				  Time.Task.Hz_1000 = 0;
+				  Time.Task.Hz_100 = 0;
 			  }
 
 		  }

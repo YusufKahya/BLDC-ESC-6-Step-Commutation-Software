@@ -99,10 +99,6 @@ void Run_Motor()
 
 	  static uint8_t Next_State_Index = 0;
 
-//	  Motor_Control.A_Out = HAL_COMP_GetOutputLevel(&hcomp1) >> 30;
-//	  Motor_Control.B_Out = HAL_COMP_GetOutputLevel(&hcomp3) >> 30;
-//	  Motor_Control.C_Out = HAL_COMP_GetOutputLevel(&hcomp5) >> 30;
-
 	  Motor_Control.A_Out = HAL_GPIO_ReadPin(Comp_A_OUT_GPIO_Port, Comp_A_OUT_Pin);
 	  Motor_Control.B_Out = HAL_GPIO_ReadPin(Comp_B_OUT_GPIO_Port, Comp_B_OUT_Pin);
 	  Motor_Control.C_Out = HAL_GPIO_ReadPin(Comp_C_OUT_GPIO_Port, Comp_C_OUT_Pin);
