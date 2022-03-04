@@ -120,7 +120,7 @@ int main(void)
 	  if(Motor_Control.System_Enable == 1)
 	  {
 
-		  if(Motor_Control.Blinde_Mode == 0)
+		  if(Motor_Control.Blinde_Mode != 1)
 		  {
 
 			  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
@@ -159,7 +159,7 @@ int main(void)
 		  else
 		  {
 
-			  if(Time.Task.Hz_100 == 1)
+			  if(Time.Task.Hz_50 == 1)
 			  {
 
 				  static int h = 0;
@@ -168,7 +168,7 @@ int main(void)
 
 				  Motor_Control.Drive_Stage = START_UP;
 
-				  Time.Task.Hz_100 = 0;
+				  Time.Task.Hz_50 = 0;
 			  }
 
 		  }

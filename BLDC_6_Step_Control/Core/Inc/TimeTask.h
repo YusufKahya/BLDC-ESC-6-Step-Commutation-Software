@@ -22,6 +22,7 @@ typedef union
 		uint8_t Hz_1000 : 1;
 		uint8_t Hz_200 : 1;
 		uint8_t Hz_100 : 1;
+		uint8_t Hz_50 : 1;
 		uint8_t Hz_5 : 1;
 	}Task;
 

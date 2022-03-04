@@ -15,9 +15,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		timerCounter++;
 
-		if(timerCounter % 10 == 1 )
+		if(timerCounter % 20 == 1 )
 		{
-			Time.Task.Hz_100 = 1;
+			Time.Task.Hz_50 = 1;
 		}
 
 //		if(timerCounter % 1 == 0)
