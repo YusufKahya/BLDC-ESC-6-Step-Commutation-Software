@@ -1,5 +1,5 @@
 SixStepCommutation.c:14:6:PeripheralsStart	8	static
-SixStepCommutation.c:41:6:Stop_Motor	8	static
+SixStepCommutation.c:41:6:Stop_Motor	4	static
 SixStepCommutation.c:53:6:Start_Up_Motor	8	static
 SixStepCommutation.c:75:6:Align_Motor	8	static
 SixStepCommutation.c:97:6:Run_Motor	8	static

@@ -40,12 +40,12 @@ void PeripheralsStart()
 
 void Stop_Motor()
 {
-	Set_Motor_State(Trigger_Control_State[0],0);
-	Set_Motor_State(Trigger_Control_State[1],0);
-	Set_Motor_State(Trigger_Control_State[2],0);
-	Set_Motor_State(Trigger_Control_State[3],0);
-	Set_Motor_State(Trigger_Control_State[4],0);
-	Set_Motor_State(Trigger_Control_State[5],0);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1,0);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2,0);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3,0);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,0);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,0);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,0);
 
 	Motor_Control.Drive_Stage = START_UP;
 }
