@@ -10,8 +10,7 @@
 #ifndef SRC_TIMETASK_H_
 #define SRC_TIMETASK_H_
 
- TIM_HandleTypeDef htim4;
- TIM_HandleTypeDef htim2;
+ TIM_HandleTypeDef htim15;
 
  uint32_t timerCounter;
 

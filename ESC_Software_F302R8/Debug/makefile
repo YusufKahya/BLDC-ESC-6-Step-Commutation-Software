@@ -60,8 +60,8 @@ all: main-build
 main-build: ESC_Software_F302R8.elf secondary-outputs
 
 # Tool invocations
-ESC_Software_F302R8.elf: $(OBJS) $(USER_OBJS) C:\Users\ysfkh\STM32CubeIDE\workspace_1.8.0\ESC_Software_F302R8\STM32F302R8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "ESC_Software_F302R8.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ysfkh\STM32CubeIDE\workspace_1.8.0\ESC_Software_F302R8\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ESC_Software_F302R8.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+ESC_Software_F302R8.elf: $(OBJS) $(USER_OBJS) D:\Fork\BLDC-ESC-6-Step-Commutation-Software\ESC_Software_F302R8\STM32F302R8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "ESC_Software_F302R8.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Fork\BLDC-ESC-6-Step-Commutation-Software\ESC_Software_F302R8\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ESC_Software_F302R8.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

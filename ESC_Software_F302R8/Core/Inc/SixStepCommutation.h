@@ -12,13 +12,12 @@
 
 #define MOTOR_CONTROL_TASK_HZ 20000.0f
 
-COMP_HandleTypeDef hcomp1;
-COMP_HandleTypeDef hcomp3;
-COMP_HandleTypeDef hcomp5;
+COMP_HandleTypeDef hcomp2;
+COMP_HandleTypeDef hcomp4;
+COMP_HandleTypeDef hcomp6;
 
 TIM_HandleTypeDef htim1;
-TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim2;
 
 RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
