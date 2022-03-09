@@ -56,9 +56,12 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint32_t Max_Signal;
 		uint32_t Pulse_Center;
 		uint32_t Control_Counter;
-		uint8_t Motor_State_Index;
+		uint32_t Blinde_Mode_Counter;
+		uint8_t  Motor_State_Index;
+		uint32_t Blinde_Mode_RPM;
 
 		DriveStage Drive_Stage;
+
 	}MotorControl;
 
 	typedef struct

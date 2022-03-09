@@ -17,12 +17,14 @@ void PeripheralsStart()
 
 	  Start_Up.Duty_Cycle = 50;
 	  Start_Up.Delay_Seconds = 0.00005f; // 50 mikro saniye (20k task'ta yapılabilecek minimum süre)
-	  Start_Up.Tour = 3;
+	  Start_Up.Tour = 7;
 
 	  Start_Up.Align_Coefficient = 2;
 	  Start_Up.Align_DutyCycle = 50;
 
 	  Motor_Control.Drive_Stage = START_UP;
+
+	  Motor_Control.Blinde_Mode_RPM = 20;
 
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);	// Phase A High
 	  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);	// Phase B High
@@ -35,7 +37,7 @@ void PeripheralsStart()
 	  HAL_COMP_Start(&hcomp4);	// Phase B Out
 	  HAL_COMP_Start(&hcomp6);	// Phase C Out
 
-	  HAL_TIM_Base_Start_IT(&htim15);	// for Time Tasks
+//	  HAL_TIM_Base_Start_IT(&htim15);	// for Time Tasks
 }
 
 void Stop_Motor()

@@ -83,7 +83,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -120,10 +121,10 @@ int main(void)
 	  if(Motor_Control.System_Enable == 1)
 	  {
 
-		  if(Motor_Control.Blinde_Mode != 1)
+		  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 		  {
 
-			  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
+			  if(Motor_Control.Blinde_Mode != 1)
 			  {
 
 				  switch(Motor_Control.Drive_Stage)
@@ -154,24 +155,24 @@ int main(void)
 						  break;
 				  }
 			  }
-		  }
 
-		  else
-		  {
-
-			  if(Time.Task.Hz_50 == 1)
+			  else
 			  {
+				  if(Motor_Control.Blinde_Mode_Counter++ >= MOTOR_CONTROL_TASK_HZ*(1/(Motor_Control.Blinde_Mode_RPM*6)))
+				  {
+					  Motor_Control.Blinde_Mode_Counter = 0;
 
-				  static int h = 0;
-				  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
-				  h = (h+1) % 6;
+					  static int h = 0;
+					  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
+					  h = (h+1) % 6;
 
-				  Motor_Control.Drive_Stage = START_UP;
+					  Motor_Control.Drive_Stage = START_UP;
+				  }
 
-				  Time.Task.Hz_50 = 0;
 			  }
 
 		  }
+
 	  }
 
 	  else
