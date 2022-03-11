@@ -83,8 +83,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-
-	HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -158,9 +157,15 @@ int main(void)
 
 			  else
 			  {
-				  if(Motor_Control.Blinde_Mode_Counter++ >= MOTOR_CONTROL_TASK_HZ*(1/(Motor_Control.Blinde_Mode_RPM*6)))
+				  if(Motor_Control.Blinde_Mode_Counter++ >= MOTOR_CONTROL_TASK_HZ*(float)(1.0f/(Motor_Control.Blinde_Mode_RPM*6)))
 				  {
 					  Motor_Control.Blinde_Mode_Counter = 0;
+
+					  Motor_Control.A_Out = HAL_GPIO_ReadPin(COMP_A_OUT_GPIO_Port, COMP_A_OUT_Pin);
+					  Motor_Control.B_Out = HAL_GPIO_ReadPin(COMP_B_OUT_GPIO_Port, COMP_B_OUT_Pin);
+					  Motor_Control.C_Out = HAL_GPIO_ReadPin(COMP_C_OUT_GPIO_Port, COMP_C_OUT_Pin);
+
+					  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
 
 					  static int h = 0;
 					  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
@@ -277,7 +282,7 @@ static void MX_COMP4_Init(void)
 
   /* USER CODE END COMP4_Init 1 */
   hcomp4.Instance = COMP4;
-  hcomp4.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1_CH1;
+  hcomp4.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
   hcomp4.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp4.Init.Output = COMP_OUTPUT_NONE;
   hcomp4.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;

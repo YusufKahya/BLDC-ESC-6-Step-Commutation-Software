@@ -71,14 +71,14 @@ void Error_Handler(void);
 #define B_LOW_GPIO_Port GPIOA
 #define COMP_A_INM_Pin GPIO_PIN_2
 #define COMP_A_INM_GPIO_Port GPIOA
-#define COMP_B_INM_Pin GPIO_PIN_4
-#define COMP_B_INM_GPIO_Port GPIOA
 #define COMP_A_INP_Pin GPIO_PIN_7
 #define COMP_A_INP_GPIO_Port GPIOA
 #define COMP_B_INP_Pin GPIO_PIN_0
 #define COMP_B_INP_GPIO_Port GPIOB
 #define COMP_B_OUT_Pin GPIO_PIN_1
 #define COMP_B_OUT_GPIO_Port GPIOB
+#define COMP_B_INM_Pin GPIO_PIN_2
+#define COMP_B_INM_GPIO_Port GPIOB
 #define C_LOW_Pin GPIO_PIN_10
 #define C_LOW_GPIO_Port GPIOB
 #define COMP_C_INP_Pin GPIO_PIN_11

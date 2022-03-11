@@ -123,22 +123,16 @@ void HAL_COMP_MspInit(COMP_HandleTypeDef* hcomp)
 
   /* USER CODE END COMP4_MspInit 0 */
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**COMP4 GPIO Configuration
-    PA4     ------> COMP4_INM
     PB0     ------> COMP4_INP
     PB1     ------> COMP4_OUT
+    PB2     ------> COMP4_INM
     */
-    GPIO_InitStruct.Pin = COMP_B_INM_Pin;
+    GPIO_InitStruct.Pin = COMP_B_INP_Pin|COMP_B_INM_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(COMP_B_INM_GPIO_Port, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = COMP_B_INP_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(COMP_B_INP_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = COMP_B_OUT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -215,13 +209,11 @@ void HAL_COMP_MspDeInit(COMP_HandleTypeDef* hcomp)
   /* USER CODE END COMP4_MspDeInit 0 */
 
     /**COMP4 GPIO Configuration
-    PA4     ------> COMP4_INM
     PB0     ------> COMP4_INP
     PB1     ------> COMP4_OUT
+    PB2     ------> COMP4_INM
     */
-    HAL_GPIO_DeInit(COMP_B_INM_GPIO_Port, COMP_B_INM_Pin);
-
-    HAL_GPIO_DeInit(GPIOB, COMP_B_INP_Pin|COMP_B_OUT_Pin);
+    HAL_GPIO_DeInit(GPIOB, COMP_B_INP_Pin|COMP_B_OUT_Pin|COMP_B_INM_Pin);
 
   /* USER CODE BEGIN COMP4_MspDeInit 1 */
 
