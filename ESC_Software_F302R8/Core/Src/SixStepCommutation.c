@@ -17,7 +17,7 @@ void PeripheralsStart()
 
 	  Start_Up.Duty_Cycle = 50;
 	  Start_Up.Delay_Seconds = 0.00005f; // 50 mikro saniye (20k task'ta yapılabilecek minimum süre)
-	  Start_Up.Tour = 7;
+	  Start_Up.Tour = 5;
 
 	  Start_Up.Align_Coefficient = 2;
 	  Start_Up.Align_DutyCycle = 50;

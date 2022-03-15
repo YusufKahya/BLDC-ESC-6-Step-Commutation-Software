@@ -250,7 +250,7 @@ static void MX_COMP2_Init(void)
 
   /* USER CODE END COMP2_Init 1 */
   hcomp2.Instance = COMP2;
-  hcomp2.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+  hcomp2.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1_CH1;
   hcomp2.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp2.Init.Output = COMP_OUTPUT_NONE;
   hcomp2.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
@@ -282,7 +282,7 @@ static void MX_COMP4_Init(void)
 
   /* USER CODE END COMP4_Init 1 */
   hcomp4.Instance = COMP4;
-  hcomp4.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+  hcomp4.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1_CH1;
   hcomp4.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp4.Init.Output = COMP_OUTPUT_NONE;
   hcomp4.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
@@ -314,7 +314,7 @@ static void MX_COMP6_Init(void)
 
   /* USER CODE END COMP6_Init 1 */
   hcomp6.Instance = COMP6;
-  hcomp6.Init.InvertingInput = COMP_INVERTINGINPUT_IO1;
+  hcomp6.Init.InvertingInput = COMP_INVERTINGINPUT_DAC1_CH1;
   hcomp6.Init.NonInvertingInput = COMP_NONINVERTINGINPUT_IO1;
   hcomp6.Init.Output = COMP_OUTPUT_NONE;
   hcomp6.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
