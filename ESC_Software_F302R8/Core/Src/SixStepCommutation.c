@@ -13,7 +13,7 @@ const uint8_t Trigger_Control_State[6] = {State_A_B,State_A_C,State_B_C,State_B_
 
 void PeripheralsStart()
 {
-	  Motor_Control.Duty_Cycle = 20;
+	  Motor_Control.Duty_Cycle = 25;
 
 	  Start_Up.Duty_Cycle = 50;
 	  Start_Up.Delay_Seconds = 0.00005f; // 50 mikro saniye (20k task'ta yapılabilecek minimum süre)

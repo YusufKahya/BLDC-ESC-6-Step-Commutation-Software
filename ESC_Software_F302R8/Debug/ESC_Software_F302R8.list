@@ -85,9 +85,9 @@ void PeripheralsStart()
 {
  80001c8:	b580      	push	{r7, lr}
  80001ca:	af00      	add	r7, sp, #0
-	  Motor_Control.Duty_Cycle = 20;
+	  Motor_Control.Duty_Cycle = 25;
  80001cc:	4b1d      	ldr	r3, [pc, #116]	; (8000244 <PeripheralsStart+0x7c>)
- 80001ce:	2214      	movs	r2, #20
+ 80001ce:	2219      	movs	r2, #25
  80001d0:	709a      	strb	r2, [r3, #2]
 
 	  Start_Up.Duty_Cycle = 50;
