@@ -114,6 +114,12 @@ void Run_Motor()
 		  Motor_Control.Motor_State_Index = Next_State_Index;
 
 		  Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Motor_Control.Duty_Cycle);
+
+		  if(Motor_Control.Rotor_Position == 1)
+		  {
+			  Motor_Control.RPM = 1200000/Motor_Control.RPM_Counter;
+			  Motor_Control.RPM_Counter = 0;
+		  }
 	  }
 
 }

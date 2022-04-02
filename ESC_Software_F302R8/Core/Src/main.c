@@ -123,6 +123,8 @@ int main(void)
 		  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 		  {
 
+			  Motor_Control.RPM_Counter++;
+
 			  if(Motor_Control.Blinde_Mode != 1)
 			  {
 

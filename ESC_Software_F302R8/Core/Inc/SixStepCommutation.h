@@ -60,6 +60,9 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint8_t  Motor_State_Index;
 		uint32_t Blinde_Mode_RPM;
 
+		uint16_t RPM_Counter;
+		uint16_t RPM;
+
 		DriveStage Drive_Stage;
 
 	}MotorControl;
