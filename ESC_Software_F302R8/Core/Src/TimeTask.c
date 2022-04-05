@@ -13,23 +13,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim15)
 	{
-		timerCounter++;
+//		timerCounter++;
+
+		Motor_Control.RPM_Counter++;	// 200 kHz'de artıyor.
 
 //		if(timerCounter % 20 == 1 )
 //		{
 //			Time.Task.Hz_50 = 1;
 //		}
-
-		if(timerCounter % 200 == 1 )
-		{
-			Time.Task.Hz_5 = 1;
-		}
-
+//
+//		if(timerCounter % 200 == 1 )
+//		{
+//			Time.Task.Hz_5 = 1;
+//		}
+//
 //		if(timerCounter % 1 == 0)
 //		{
 //			Time.Task.Hz_1000 = 1;
 //		}
-
+//
 //		if(timerCounter % 1 == 0)
 //		{
 //			Time.Task.Hz_20000 = 1;

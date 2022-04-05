@@ -117,11 +117,33 @@ void Run_Motor()
 
 		  if(Motor_Control.Rotor_Position == 1)
 		  {
-			  Motor_Control.RPM = 1200000/Motor_Control.RPM_Counter;
+			  Motor_Control.RPM = 1200000.0f/Motor_Control.RPM_Counter;
 			  Motor_Control.RPM_Counter = 0;
+//			  Motor_Control.RPM++;	// Buraya beklediğimizden hızlı giriyor		0,008 saniyede bir giriyo.
+			  // wait a minute 0,008 saniye 7200 rpm yapıyo yani normal. o zaman sıkıntı başka bir yerde, burda değil
 		  }
 	  }
 
+}
+
+void Blinde_Mode()
+{
+	  if(Motor_Control.Blinde_Mode_Counter++ >= MOTOR_CONTROL_TASK_HZ*(float)(1.0f/(Motor_Control.Blinde_Mode_RPM*6)))
+	  {
+		  Motor_Control.Blinde_Mode_Counter = 0;
+
+		  Motor_Control.A_Out = HAL_GPIO_ReadPin(COMP_A_OUT_GPIO_Port, COMP_A_OUT_Pin);
+		  Motor_Control.B_Out = HAL_GPIO_ReadPin(COMP_B_OUT_GPIO_Port, COMP_B_OUT_Pin);
+		  Motor_Control.C_Out = HAL_GPIO_ReadPin(COMP_C_OUT_GPIO_Port, COMP_C_OUT_Pin);
+
+		  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
+
+		  static int h = 0;
+		  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
+		  h = (h+1) % 6;
+
+		  Motor_Control.Drive_Stage = START_UP;
+	  }
 }
 
 void Set_Motor_State(uint8_t State, uint16_t DutyCycle)

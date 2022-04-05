@@ -60,8 +60,8 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 		uint8_t  Motor_State_Index;
 		uint32_t Blinde_Mode_RPM;
 
-		uint16_t RPM_Counter;
-		uint16_t RPM;
+		uint32_t RPM_Counter;
+		uint32_t RPM;
 
 		DriveStage Drive_Stage;
 
@@ -97,6 +97,9 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
 	// Last Stage
 	void Run_Motor();
+
+	// Blinde Mode Drive
+	void Blinde_Mode();
 
 	// Stops Motor
 	void Stop_Motor();

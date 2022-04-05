@@ -3,4 +3,5 @@ SixStepCommutation.c:43:6:Stop_Motor	4	static
 SixStepCommutation.c:55:6:Start_Up_Motor	8	static
 SixStepCommutation.c:77:6:Align_Motor	8	static
 SixStepCommutation.c:99:6:Run_Motor	8	static
-SixStepCommutation.c:127:6:Set_Motor_State	16	static
+SixStepCommutation.c:128:6:Blinde_Mode	8	static
+SixStepCommutation.c:148:6:Set_Motor_State	16	static

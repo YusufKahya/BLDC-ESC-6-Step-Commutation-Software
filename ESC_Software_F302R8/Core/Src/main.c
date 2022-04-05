@@ -123,8 +123,6 @@ int main(void)
 		  if(htim1.Instance->CNT == Motor_Control.Pulse_Center)
 		  {
 
-			  Motor_Control.RPM_Counter++;
-
 			  if(Motor_Control.Blinde_Mode != 1)
 			  {
 
@@ -159,23 +157,7 @@ int main(void)
 
 			  else
 			  {
-				  if(Motor_Control.Blinde_Mode_Counter++ >= MOTOR_CONTROL_TASK_HZ*(float)(1.0f/(Motor_Control.Blinde_Mode_RPM*6)))
-				  {
-					  Motor_Control.Blinde_Mode_Counter = 0;
-
-					  Motor_Control.A_Out = HAL_GPIO_ReadPin(COMP_A_OUT_GPIO_Port, COMP_A_OUT_Pin);
-					  Motor_Control.B_Out = HAL_GPIO_ReadPin(COMP_B_OUT_GPIO_Port, COMP_B_OUT_Pin);
-					  Motor_Control.C_Out = HAL_GPIO_ReadPin(COMP_C_OUT_GPIO_Port, COMP_C_OUT_Pin);
-
-					  Motor_Control.Rotor_Position = (Motor_Control.C_Out << 2) + (Motor_Control.B_Out << 1) + (Motor_Control.A_Out);
-
-					  static int h = 0;
-					  Set_Motor_State(Trigger_Control_State[h], Motor_Control.Duty_Cycle);
-					  h = (h+1) % 6;
-
-					  Motor_Control.Drive_Stage = START_UP;
-				  }
-
+				  Blinde_Mode();
 			  }
 
 		  }
@@ -488,7 +470,7 @@ static void MX_TIM15_Init(void)
   htim15.Instance = TIM15;
   htim15.Init.Prescaler = 71;
   htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim15.Init.Period = 999;
+  htim15.Init.Period = 49;
   htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim15.Init.RepetitionCounter = 0;
   htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
