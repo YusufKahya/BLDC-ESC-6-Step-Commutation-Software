@@ -12,8 +12,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim15)
 	{
+		elapsedtime++;
+		if(elapsedtime % 1 == 0)
+		{
+			saniye2++;
+			rpmvalue=(RpmFlag-RpmFlagOld)*6000;
+			RpmFlagOld=RpmFlag;
+		}
+
 
 //		timerCounter++;
+
 
 //		if(timerCounter % 200 == 0)
 //		{

@@ -21,6 +21,8 @@ TIM_HandleTypeDef htim2;
 
 RCC_PeriphCLKInitTypeDef PeriphClkInit;
 int RpmFlag;
+int rpmvalue;
+int RpmFlagOld;
 	typedef enum
 	{
 		NullStart,

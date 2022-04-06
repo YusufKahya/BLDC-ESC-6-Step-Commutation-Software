@@ -38,7 +38,7 @@ void PeripheralsStart()
 	  HAL_COMP_Start(&hcomp4);	// Phase B Out
 	  HAL_COMP_Start(&hcomp6);	// Phase C Out
 
-//	  HAL_TIM_Base_Start_IT(&htim15);	// for Time Tasks
+	  HAL_TIM_Base_Start_IT(&htim15);	// for Time Tasks
 }
 
 void Stop_Motor()

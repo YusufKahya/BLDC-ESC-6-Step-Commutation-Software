@@ -30,4 +30,5 @@ uint32_t Start_Up_Time_Task;
 
  time_task_union Time;
 
+ int elapsedtime,saniye,saniye2;
 #endif /* SRC_TIMETASK_H_ */
