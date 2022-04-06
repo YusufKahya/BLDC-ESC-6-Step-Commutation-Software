@@ -20,7 +20,7 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 RCC_PeriphCLKInitTypeDef PeriphClkInit;
-
+int RpmFlag;
 	typedef enum
 	{
 		NullStart,
@@ -103,6 +103,9 @@ RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
 	// Stops Motor
 	void Stop_Motor();
+
+	// RPM Calculator
+	void RPM_Calculate();
 	// *********** Function Prototypes Finish ************ //
 
 #endif /* INC_SIXSTEPCOMMUTATION_H_ */

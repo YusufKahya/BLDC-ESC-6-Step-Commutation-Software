@@ -1,7 +1,8 @@
-SixStepCommutation.c:14:6:PeripheralsStart	8	static
-SixStepCommutation.c:43:6:Stop_Motor	4	static
-SixStepCommutation.c:55:6:Start_Up_Motor	8	static
-SixStepCommutation.c:77:6:Align_Motor	8	static
-SixStepCommutation.c:99:6:Run_Motor	8	static
-SixStepCommutation.c:128:6:Blinde_Mode	8	static
-SixStepCommutation.c:148:6:Set_Motor_State	16	static
+SixStepCommutation.c:15:6:PeripheralsStart	8	static
+SixStepCommutation.c:44:6:Stop_Motor	4	static
+SixStepCommutation.c:56:6:Start_Up_Motor	8	static
+SixStepCommutation.c:78:6:Align_Motor	8	static
+SixStepCommutation.c:100:6:Run_Motor	8	static
+SixStepCommutation.c:128:6:RPM_Calculate	4	static
+SixStepCommutation.c:139:6:Blinde_Mode	8	static
+SixStepCommutation.c:159:6:Set_Motor_State	16	static

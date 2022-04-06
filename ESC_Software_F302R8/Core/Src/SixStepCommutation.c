@@ -9,6 +9,7 @@
 #include "SixStepCommutation.h"
 #include "TimeTask.h"
 
+extern volatile uint32_t *DWT_CYCCNT;
 const uint8_t Trigger_Control_State[6] = {State_A_B,State_A_C,State_B_C,State_B_A,State_C_A,State_C_B};
 
 void PeripheralsStart()
@@ -117,13 +118,22 @@ void Run_Motor()
 
 		  if(Motor_Control.Rotor_Position == 1)
 		  {
-			  Motor_Control.RPM = 1200000.0f/Motor_Control.RPM_Counter;
-			  Motor_Control.RPM_Counter = 0;
-//			  Motor_Control.RPM++;	// Buraya beklediğimizden hızlı giriyor		0,008 saniyede bir giriyo.
-			  // wait a minute 0,008 saniye 7200 rpm yapıyo yani normal. o zaman sıkıntı başka bir yerde, burda değil
+			  RpmFlag++;
 		  }
+
 	  }
 
+}
+
+void RPM_Calculate()
+{
+	  if(Motor_Control.Rotor_Position == 1)
+	  {
+		  Motor_Control.RPM = 432000000/(*DWT_CYCCNT);
+		  *DWT_CYCCNT = 0;
+//			  Motor_Control.RPM++;	// Buraya beklediğimizden hızlı giriyor		0,008 saniyede bir giriyo.
+// 			  wait a minute 0,008 saniye 7200 rpm yapıyo yani normal. o zaman sıkıntı başka bir yerde, burda değil
+	  }
 }
 
 void Blinde_Mode()
