@@ -8,10 +8,18 @@
 #include "main.h"
 #include "SixStepCommutation.h"
 #include "TimeTask.h"
+#include "stdio.h"
 
 extern volatile uint32_t *DWT_CYCCNT;
 const uint8_t Trigger_Control_State[6] = {State_A_B,State_A_C,State_B_C,State_B_A,State_C_A,State_C_B};
-
+int _write(int file, char *ptr, int len)
+{
+  /* Implement your write code here, this is used by puts and printf for example */
+  int i=0;
+  for(i=0 ; i<len ; i++)
+    ITM_SendChar((*ptr++));
+  return len;
+}
 void PeripheralsStart()
 {
 	  Motor_Control.Duty_Cycle = 25;
@@ -116,10 +124,11 @@ void Run_Motor()
 
 		  Set_Motor_State(Trigger_Control_State[Motor_Control.Motor_State_Index], Motor_Control.Duty_Cycle);
 
-		  if(Motor_Control.Rotor_Position == 1)
-		  {
-			  RpmFlag++;
-		  }
+//		  if(Motor_Control.Rotor_Position == 1)
+//		  {
+//			  RpmFlag++;
+//			  *DWT_CYCCNT = 0;
+//		  }
 
 	  }
 
